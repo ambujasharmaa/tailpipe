@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>DevFeed</title>
   <meta name="description" content="Top software engineering links in one feed.">
-  <meta name="theme-color" content="#e6f0fb">
+  <meta name="theme-color" content="#d9e7f7">
   <script>
     // Apply the saved theme before first paint. "auto" follows the OS: light, or the Oxford dark theme.
     window.applyTheme = function () {
@@ -14,7 +14,7 @@
       var t = pref === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'oxford' : 'light') : pref;
       document.documentElement.dataset.theme = t;
       document.documentElement.classList.toggle('compact', view === 'compact');
-      var bg = { light: '#e6f0fb', oxford: '#011837', plum: '#2a0e29' }[t];
+      var bg = { light: '#d9e7f7', oxford: '#000c1f', plum: '#170616' }[t];
       document.querySelector('meta[name="theme-color"]').setAttribute('content', bg);
     };
     applyTheme();
@@ -28,13 +28,13 @@
   <meta name="apple-mobile-web-app-title" content="DevFeed">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="top">
     <div class="bar">
-      <h1>Dev<span>Feed</span></h1>
+      <h1 id="logo" aria-label="DevFeed">Dev<span>Feed</span></h1>
       <button id="theme" class="icon-btn" aria-label="Theme">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg>
       </button>

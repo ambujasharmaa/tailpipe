@@ -208,8 +208,34 @@ $('#view').addEventListener('click', () => {
 });
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
 
+// ---------- wordmark: random glyphs settle into "DevFeed", left to right ----------
+const GLYPHS = '!<>_/\\[]{}=+*^?#$%&01abcdefxz';
+const logoSlots = (() => {
+  const mk = c => h('span', { class: 'ch', 'aria-hidden': 'true' }, c);
+  const dev = [...'Dev'].map(mk), feed = [...'Feed'].map(mk);
+  $('#logo').replaceChildren(...dev, h('span', { class: 'feed' }, ...feed));
+  return [...dev, ...feed].map(el => ({ el, final: el.textContent }));
+})();
+let scrambleTimer;
+function scramble() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  clearInterval(scrambleTimer);
+  const settleAt = logoSlots.map((_, i) => 6 + i * 3 + Math.floor(Math.random() * 3)); // in ticks
+  let tick = 0;
+  scrambleTimer = setInterval(() => {
+    tick++;
+    logoSlots.forEach((s, i) => {
+      const done = tick >= settleAt[i];
+      s.el.textContent = done ? s.final : GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+      s.el.classList.toggle('wild', !done);
+    });
+    if (tick >= settleAt.at(-1)) clearInterval(scrambleTimer);
+  }, 45);
+}
+
 // ---------- boot ----------
-$('#refresh').addEventListener('click', reset);
+$('#refresh').addEventListener('click', () => { scramble(); reset(); });
+scramble();
 const syncOffline = () => { $('#offline').hidden = navigator.onLine; };
 addEventListener('online', syncOffline);
 addEventListener('offline', syncOffline);
