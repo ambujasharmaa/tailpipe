@@ -1,14 +1,14 @@
 # Tailpipe
 
-App name is Tailpipe (formerly DevFeed). The repo, Pages URL (/devfeed/), localStorage keys (`devfeed.*`) and cache names (`devfeed-*`) keep the old name on purpose: renaming them would break installed copies and wipe saved/seen items.
+App name is Tailpipe (formerly DevFeed); repo is ambujasharmaa/tailpipe, served at /tailpipe/. localStorage keys (`devfeed.*`) and cache names (`devfeed-*`) keep the old prefix on purpose; they are internal and renaming them would wipe saved/seen items.
 
 Mobile-first PWA: one scrollable feed of software-engineering links. Hosted free on GitHub Pages
-(https://ambujasharmaa.github.io/devfeed/), installed to the phone home screen.
+(https://ambujasharmaa.github.io/tailpipe/), installed to the phone home screen.
 
 ## Hard constraints
 - Plain HTML + CSS + vanilla JS (ES modules). No framework, no bundler, no build step. Repo root is deployed as-is.
 - All data is fetched live from the browser. No backend, no accounts, no third-party CORS proxies. Never add a proxy silently.
-- **Relative URLs only** (`./`, `sw.js`, `icons/...`, `data/...`). GitHub Pages serves from `/devfeed/`, so a leading `/` breaks it.
+- **Relative URLs only** (`./`, `sw.js`, `icons/...`, `data/...`). GitHub Pages serves from `/tailpipe/`, so a leading `/` breaks it.
   Applies to manifest `start_url`/`scope`, SW registration and all asset paths.
 - Keep it small: index.html, styles.css, app.js (UI/state), sources.js (adapters), sw.js, manifest.webmanifest, icons/.
 
@@ -40,12 +40,13 @@ Mobile-first PWA: one scrollable feed of software-engineering links. Hosted free
 Regenerate icons from `icons/icon.svg` with `rsvg-convert -w N -h N` (192, 512, 180; maskable is the same art, kept inside the safe zone).
 
 ## Design
-- Fonts: Space Grotesk (titles, UI; weight 600) + JetBrains Mono (metadata, chips).
+- Fonts: Google Sans (titles, UI; the open successor to Product Sans, which the user asked for) + Google Sans Code (metadata).
 - Themes via `data-theme` on <html>: `light` (pastel blue #d9e7f7 + white), `oxford` (#000c1f bg, #011837-family navy + #fd36ab rose),
   `plum` (#170616 bg, #3b153a plum cards + #f0c986 honey). User cycles Auto/Light/Oxford/Plum; Auto = light or oxford by prefers-color-scheme.
   `applyTheme()` is inline in index.html so it runs before first paint.
 - Each source has a color per theme (`--c-<sourcekey>`), used only for the source name in the meta line. New source = add its var to all 3 themes.
-- Keep it plain, like a real reader app: no colored stripes, uppercase tracked labels, dots, pills, glows, glass blur, drop shadows, toasts, emoji/unicode glyph icons (use inline SVG), or em dashes in UI copy. Short, plain copy.
+- Source tabs are pills with an accent-tinted active state (user asked for highlights there).
+- Keep it plain, like a real reader app: no colored stripes, uppercase tracked labels, dots, glows, glass blur, drop shadows, toasts, emoji/unicode glyph icons (use inline SVG), or em dashes in UI copy. Short, plain copy.
 - Views: rich cards (default) or compact rows (`.compact` on <html>), toggled in the header; both stored in localStorage.
 - Wordmark scrambles from random glyphs into "Tailpipe" on load and on refresh (`scramble()` in app.js).
 - Feel: a little bold, but optimized for scrolling and reading. Respect `env(safe-area-inset-*)`.

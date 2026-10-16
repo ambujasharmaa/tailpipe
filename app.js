@@ -28,7 +28,7 @@ function h(tag, props = {}, ...kids) {
     if (v == null || v === false) continue;
     if (k === 'class') el.className = v;
     else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
-    else el.setAttribute(k, v === true ? '' : v);
+    else el.setAttribute(k, v === true && !k.startsWith('aria-') ? '' : v);
   }
   el.append(...kids.flat().filter(k => k != null && k !== false));
   return el;
