@@ -33,6 +33,7 @@ Mobile-first PWA: one scrollable feed of software-engineering links. Hosted free
 ## Service worker
 - Shell: cache-first, cache name `devfeed-shell-<VERSION>`. **Bump `VERSION` in sw.js whenever any shell file changes**, otherwise clients keep the old shell.
 - APIs: network-first, falling back to the last cached response (non-OK responses also fall back). Cache `devfeed-api` persists across versions.
+- Install fetches shell files with `?v=<VERSION>` so GitHub's CDN (10 min cache) can't hand a new SW stale files.
 - New SW calls `skipWaiting`/`clients.claim`; app.js reloads once on `controllerchange`.
 
 ## Run locally

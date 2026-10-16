@@ -1,5 +1,5 @@
 // Bump VERSION on every deploy that changes a shell file, so clients pick up the new shell.
-const VERSION = 'v6';
+const VERSION = 'v7';
 const SHELL_CACHE = `devfeed-shell-${VERSION}`;
 const API_CACHE = 'devfeed-api';     // survives shell upgrades so offline still has a feed
 const FONT_CACHE = 'devfeed-fonts';
@@ -10,9 +10,15 @@ const SHELL = [
 const API_HOSTS = ['hacker-news.firebaseio.com', 'dev.to', 'api.github.com', 'huggingface.co'];
 
 self.addEventListener('install', e => {
-  // cache:'reload' bypasses the HTTP cache so a new deploy really fetches fresh files
+  // GitHub Pages' CDN caches files for up to 10 min, so right after a deploy it can serve the new sw.js
+  // with old shell files. A ?v= query misses that cache (and cache:'reload' skips the browser's);
+  // each response is stored under its clean URL.
   e.waitUntil(caches.open(SHELL_CACHE)
-    .then(c => c.addAll(SHELL.map(u => new Request(u, { cache: 'reload' }))))
+    .then(c => Promise.all(SHELL.map(async u => {
+      const res = await fetch(`${u}?v=${VERSION}`, { cache: 'reload' });
+      if (!res.ok) throw new Error(`${res.status} ${u}`);
+      await c.put(u, res);
+    })))
     .then(() => self.skipWaiting()));
 });
 
