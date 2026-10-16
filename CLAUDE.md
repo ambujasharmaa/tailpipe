@@ -38,5 +38,10 @@ Mobile-first PWA: one scrollable feed of software-engineering links. Hosted free
 Regenerate icons from `icons/icon.svg` with `rsvg-convert -w N -h N` (192, 512, 180; maskable is the same art, kept inside the safe zone).
 
 ## Design
-Newsreader (serif titles) + JetBrains Mono (metadata), warm paper/ink palette, single accent (burnt orange).
-Colors are CSS variables with a `prefers-color-scheme` dark override. Respect `env(safe-area-inset-*)`.
+- Fonts: Bricolage Grotesque (titles, UI) + JetBrains Mono (metadata, chips).
+- Themes via `data-theme` on <html>: `light` (pastel blue #e6f0fb + white), `oxford` (#011837 navy + #fd36ab rose),
+  `plum` (#3b153a plum + #f0c986 honey). User cycles Auto/Light/Oxford/Plum; Auto = light or oxford by prefers-color-scheme.
+  `applyTheme()` is inline in index.html so it runs before first paint.
+- Each source has a color per theme (`--c-<sourcekey>`), shown as a card stripe, badge dot and chip dot. New source = add its var to all 3 themes.
+- Views: rich cards (default) or compact rows (`.compact` on <html>), toggled in the header; both stored in localStorage.
+- Feel: a little bold, but optimized for scrolling and reading. Respect `env(safe-area-inset-*)`.

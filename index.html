@@ -5,8 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>DevFeed</title>
   <meta name="description" content="Top software engineering links in one feed.">
-  <meta name="theme-color" content="#f4efe6" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#151311" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#e6f0fb">
+  <script>
+    // Apply the saved theme before first paint. "auto" follows the OS: light, or the Oxford dark theme.
+    window.applyTheme = function () {
+      var pref = 'auto', view = 'rich';
+      try { pref = JSON.parse(localStorage.getItem('devfeed.theme')) || 'auto'; view = JSON.parse(localStorage.getItem('devfeed.view')) || 'rich'; } catch (e) {}
+      var t = pref === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'oxford' : 'light') : pref;
+      document.documentElement.dataset.theme = t;
+      document.documentElement.classList.toggle('compact', view === 'compact');
+      var bg = { light: '#e6f0fb', oxford: '#011837', plum: '#2a0e29' }[t];
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', bg);
+    };
+    applyTheme();
+  </script>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -16,14 +28,22 @@
   <meta name="apple-mobile-web-app-title" content="DevFeed">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=JetBrains+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="top">
     <div class="bar">
       <h1>Dev<span>Feed</span></h1>
-      <button id="refresh" class="icon-btn" aria-label="Refresh">↻</button>
+      <button id="theme" class="icon-btn" aria-label="Theme">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg>
+      </button>
+      <button id="view" class="icon-btn" aria-label="Toggle compact view">
+        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="7" rx="2"/><rect x="4" y="13" width="16" height="7" rx="2"/></svg>
+      </button>
+      <button id="refresh" class="icon-btn" aria-label="Refresh">
+        <svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg>
+      </button>
     </div>
     <nav id="chips" class="chips" aria-label="Sources"></nav>
     <p id="offline" class="offline" hidden>You're offline. Showing what was cached.</p>

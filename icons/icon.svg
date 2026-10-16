@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#1d1a16"/>
+  <rect width="512" height="512" fill="#011837"/>
   <!-- content stays inside the central 60% so the same art works as a maskable icon -->
-  <rect x="150" y="160" width="212" height="34" rx="6" fill="#f4efe6"/>
-  <rect x="150" y="239" width="156" height="34" rx="6" fill="#f4efe6" opacity=".7"/>
-  <rect x="150" y="318" width="184" height="34" rx="6" fill="#f4efe6" opacity=".45"/>
-  <circle cx="362" cy="335" r="26" fill="#e8631a"/>
+  <rect x="150" y="160" width="212" height="34" rx="6" fill="#eef3fb"/>
+  <rect x="150" y="239" width="156" height="34" rx="6" fill="#eef3fb" opacity=".7"/>
+  <rect x="150" y="318" width="184" height="34" rx="6" fill="#eef3fb" opacity=".45"/>
+  <circle cx="362" cy="335" r="26" fill="#fd36ab"/>
 </svg>

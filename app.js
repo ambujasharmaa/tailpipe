@@ -48,7 +48,7 @@ function card(it) {
   const src = bySource[it.source];
   const k = key(it);
   const isSaved = k in saved;
-  const el = h('article', { class: 'card' + (seen.includes(k) ? ' seen' : '') });
+  const el = h('article', { class: 'card' + (seen.includes(k) ? ' seen' : ''), 'data-src': it.source });
   const markSeen = () => {
     if (!seen.includes(k)) { seen.push(k); seen = seen.slice(-SEEN_CAP); store.set('seen', seen); }
     el.classList.add('seen');
@@ -61,26 +61,26 @@ function card(it) {
     if (filter === 'saved' && !(k in saved)) el.remove();
   } }, isSaved ? '★ Saved' : '☆ Save');
 
+  const comments = [h('b', {}, fmt(it.comments)), ` ${src.units[1]}`];
   el.append(
-    h('div', {}, h('span', { class: 'badge' }, src.label), it.tag && h('span', { class: 'tag' }, it.tag)),
+    h('div', { class: 'head' }, h('span', { class: 'badge' }, src.label), h('span', { class: 'time' }, ago(it.time))),
     h('a', { class: 'title', href: it.url, target: '_blank', rel: 'noopener noreferrer', onclick: markSeen, onauxclick: markSeen }, it.title),
-    h('div', { class: 'meta' },
-      h('span', {}, it.domain), h('span', {}, ago(it.time)),
-      h('span', {}, `${fmt(it.points)} ${src.units[0]}`), h('span', {}, `${fmt(it.comments)} ${src.units[1]}`)),
+    h('div', { class: 'domain' }, h('span', {}, it.domain), it.tag && h('span', { class: 'tag' }, it.tag)),
     h('div', { class: 'actions' },
+      h('span', { class: 'stat' }, h('b', {}, fmt(it.points)), ` ${src.units[0]}`),
+      // the comment count doubles as the discussion link
       it.discussionUrl
-        ? h('a', { class: 'act', href: it.discussionUrl, target: '_blank', rel: 'noopener noreferrer', onclick: markSeen },
-            src.units[1] === 'forks' ? 'Forks ↗' : 'Discussion ↗')
-        : h('span'),
+        ? h('a', { class: 'stat', href: it.discussionUrl, target: '_blank', rel: 'noopener noreferrer', onclick: markSeen }, ...comments, ' ↗')
+        : h('span', { class: 'stat' }, ...comments),
       save));
   return el;
 }
 
 const skeletons = () => Array.from({ length: PAGE }, () => h('div', { class: 'card skeleton' },
-  h('div', { class: 'sk', style: 'width:18%;height:10px' }),
-  h('div', { class: 'sk', style: 'width:92%;height:18px;margin:10px 0 6px' }),
-  h('div', { class: 'sk', style: 'width:60%;height:18px;margin-bottom:12px' }),
-  h('div', { class: 'sk', style: 'width:40%;height:10px;margin-bottom:34px' })));
+  h('div', { class: 'sk', style: 'width:20%;height:10px' }),
+  h('div', { class: 'sk', style: 'width:92%;height:20px;margin:14px 0 8px' }),
+  h('div', { class: 'sk', style: 'width:64%;height:20px;margin-bottom:14px' }),
+  h('div', { class: 'sk', style: 'width:38%;height:10px;margin-bottom:38px' })));
 
 function append(items) {
   const feed = $('#feed');
@@ -99,7 +99,8 @@ function append(items) {
 function renderChips() {
   const chips = [['all', 'All'], ...enabled.map(s => [s.key, s.label]), ['saved', '★ Saved']];
   $('#chips').replaceChildren(...chips.map(([k, label]) =>
-    h('button', { class: 'chip', 'aria-pressed': k === filter, onclick() { setFilter(k); } }, label)));
+    h('button', { class: 'chip', 'aria-pressed': k === filter, onclick() { setFilter(k); } },
+      bySource[k] && h('i', { style: `--src: var(--c-${k})` }), label)));
 }
 
 function setFilter(k) {
@@ -180,6 +181,32 @@ async function loadMore() {
 }
 
 const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) loadMore(); }, { rootMargin: '600px' });
+
+// ---------- theme & view (applyTheme lives in index.html so it runs before first paint) ----------
+const THEMES = ['auto', 'light', 'oxford', 'plum'];
+const THEME_NAMES = { auto: 'Auto', light: 'Light', oxford: 'Oxford', plum: 'Plum' };
+let toastTimer;
+function toast(msg) {
+  let t = $('.toast');
+  if (!t) document.body.append(t = h('div', { class: 'toast', role: 'status' }));
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1400);
+}
+$('#theme').addEventListener('click', () => {
+  const next = THEMES[(THEMES.indexOf(store.get('theme', 'auto')) + 1) % THEMES.length];
+  store.set('theme', next);
+  applyTheme();
+  toast(`Theme: ${THEME_NAMES[next]}`);
+});
+$('#view').addEventListener('click', () => {
+  const next = store.get('view', 'rich') === 'rich' ? 'compact' : 'rich';
+  store.set('view', next);
+  applyTheme();
+  toast(next === 'rich' ? 'Cards' : 'Compact');
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
 
 // ---------- boot ----------
 $('#refresh').addEventListener('click', reset);
