@@ -17,7 +17,7 @@ Mobile-first PWA: one scrollable feed of software-engineering links. Hosted free
 - 4 items per source per page, interleaved round-robin. A failing source is skipped and shows its own error card; it never blocks the others.
 - Infinite scroll via IntersectionObserver; each source keeps its own page counter.
 - Dedupe by normalized URL (tracking params, `www.`, hash, trailing slash stripped); first occurrence wins.
-- Item shape: `{ id, source, title, url, discussionUrl, domain, points, comments, author, time }` (+ optional `tag`).
+- Item shape: `{ id, source, title, url, discussionUrl, domain, points, comments, author, time }` (+ optional `tag`, `summary`).
   GitHub maps stars->points, forks->comments, language->tag. `units` on each source sets the labels.
 - Adding a source = one adapter in `sources.js` + add it to `SOURCES`. No other change needed.
 
@@ -42,7 +42,8 @@ Regenerate icons from `icons/icon.svg` with `rsvg-convert -w N -h N` (192, 512, 
 - Themes via `data-theme` on <html>: `light` (pastel blue #d9e7f7 + white), `oxford` (#000c1f bg, #011837-family navy + #fd36ab rose),
   `plum` (#170616 bg, #3b153a plum cards + #f0c986 honey). User cycles Auto/Light/Oxford/Plum; Auto = light or oxford by prefers-color-scheme.
   `applyTheme()` is inline in index.html so it runs before first paint.
-- Each source has a color per theme (`--c-<sourcekey>`), shown as a card stripe, badge dot and chip dot. New source = add its var to all 3 themes.
+- Each source has a color per theme (`--c-<sourcekey>`), used only for the source name in the meta line. New source = add its var to all 3 themes.
+- Keep it plain, like a real reader app: no colored stripes, uppercase tracked labels, dots, pills, glows, glass blur, drop shadows, toasts, emoji/unicode glyph icons (use inline SVG), or em dashes in UI copy. Short, plain copy.
 - Views: rich cards (default) or compact rows (`.compact` on <html>), toggled in the header; both stored in localStorage.
 - Wordmark scrambles from random glyphs into "DevFeed" on load and on refresh (`scramble()` in app.js).
 - Feel: a little bold, but optimized for scrolling and reading. Respect `env(safe-area-inset-*)`.

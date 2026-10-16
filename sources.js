@@ -1,5 +1,5 @@
 // Source adapters. Each fetchPage(page, size) returns a list of normalized items:
-// { id, source, title, url, discussionUrl, domain, points, comments, author, time, tag? }
+// { id, source, title, url, discussionUrl, domain, points, comments, author, time, tag?, summary? }
 // To add a source: write one adapter and add it to SOURCES. Use relative URLs for same-origin data.
 
 const TRACKING = /^(utm_.*|fbclid|gclid|mc_.*|ref|ref_src|source|igshid|spm)$/i;
@@ -61,7 +61,7 @@ const hn = {
 
 // --- Dev.to: top articles of the last day, API order ---
 const devto = {
-  key: 'devto', label: 'Dev.to', name: 'Dev.to', enabled: true, units: ['♥', 'comments'],
+  key: 'devto', label: 'Dev.to', name: 'Dev.to', enabled: true, units: ['reactions', 'comments'],
   async fetchPage(page, size) {
     const list = await getJson(`https://dev.to/api/articles?top=1&per_page=${size}&page=${page + 1}`);
     return list.map(a => {
@@ -78,7 +78,7 @@ const devto = {
 // --- GitHub: repos created in the last 7 days, by stars ---
 // Unauthenticated search is limited to 10 requests/minute, so pages are cached for 10 minutes.
 const github = {
-  key: 'github', label: 'GitHub', name: 'GitHub', enabled: true, units: ['★', 'forks'],
+  key: 'github', label: 'GitHub', name: 'GitHub', enabled: true, units: ['stars', 'forks'],
   async fetchPage(page, size) {
     const since = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10);
     const q = encodeURIComponent(`created:>${since}`);
@@ -88,7 +88,7 @@ const github = {
       getJson(`https://api.github.com/search/repositories?q=${q}&sort=stars&order=desc&per_page=${BATCH}&page=${apiPage}`));
     const start = (page * size) % BATCH;
     return data.items.slice(start, start + size).map(r => ({
-      id: String(r.id), source: 'github', title: r.full_name + (r.description ? ` — ${r.description}` : ''),
+      id: String(r.id), source: 'github', title: r.full_name, summary: r.description || undefined,
       url: r.html_url, discussionUrl: r.html_url + '/forks', domain: 'github.com',
       points: r.stargazers_count, comments: r.forks_count, author: r.owner?.login,
       time: Date.parse(r.created_at), tag: r.language || undefined,
@@ -98,7 +98,7 @@ const github = {
 
 // --- Hugging Face daily papers ---
 const papers = {
-  key: 'papers', label: 'AI papers', name: 'AI papers', enabled: true, units: ['▲', 'comments'],
+  key: 'papers', label: 'Papers', name: 'AI papers', enabled: true, units: ['upvotes', 'comments'],
   async fetchPage(page, size) {
     const list = await getJson(`https://huggingface.co/api/daily_papers?limit=${size}&p=${page}`);
     return list.map(x => ({
