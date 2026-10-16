@@ -1,4 +1,6 @@
-# DevFeed
+# Tailpipe
+
+App name is Tailpipe (formerly DevFeed). The repo, Pages URL (/devfeed/), localStorage keys (`devfeed.*`) and cache names (`devfeed-*`) keep the old name on purpose: renaming them would break installed copies and wipe saved/seen items.
 
 Mobile-first PWA: one scrollable feed of software-engineering links. Hosted free on GitHub Pages
 (https://ambujasharmaa.github.io/devfeed/), installed to the phone home screen.
@@ -45,5 +47,5 @@ Regenerate icons from `icons/icon.svg` with `rsvg-convert -w N -h N` (192, 512, 
 - Each source has a color per theme (`--c-<sourcekey>`), used only for the source name in the meta line. New source = add its var to all 3 themes.
 - Keep it plain, like a real reader app: no colored stripes, uppercase tracked labels, dots, pills, glows, glass blur, drop shadows, toasts, emoji/unicode glyph icons (use inline SVG), or em dashes in UI copy. Short, plain copy.
 - Views: rich cards (default) or compact rows (`.compact` on <html>), toggled in the header; both stored in localStorage.
-- Wordmark scrambles from random glyphs into "DevFeed" on load and on refresh (`scramble()` in app.js).
+- Wordmark scrambles from random glyphs into "Tailpipe" on load and on refresh (`scramble()` in app.js).
 - Feel: a little bold, but optimized for scrolling and reading. Respect `env(safe-area-inset-*)`.

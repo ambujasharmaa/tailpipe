@@ -1,4 +1,4 @@
-# DevFeed
+# Tailpipe
 
 A single feed of top software-engineering links from Hacker News, Dev.to, GitHub (new trending repos) and Hugging Face daily papers.
 A static PWA: no backend, no build step, no accounts.

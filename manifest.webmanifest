@@ -1,6 +1,6 @@
 {
-  "name": "DevFeed",
-  "short_name": "DevFeed",
+  "name": "Tailpipe",
+  "short_name": "Tailpipe",
   "description": "Top software engineering links from Hacker News, Dev.to, GitHub and more.",
   "start_url": "./",
   "scope": "./",

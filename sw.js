@@ -1,5 +1,5 @@
 // Bump VERSION on every deploy that changes a shell file, so clients pick up the new shell.
-const VERSION = 'v4';
+const VERSION = 'v5';
 const SHELL_CACHE = `devfeed-shell-${VERSION}`;
 const API_CACHE = 'devfeed-api';     // survives shell upgrades so offline still has a feed
 const FONT_CACHE = 'devfeed-fonts';

@@ -198,11 +198,11 @@ $('#view').addEventListener('click', () => {
 });
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
 
-// ---------- wordmark: random glyphs settle into "DevFeed", left to right ----------
+// ---------- wordmark: random glyphs settle into "Tailpipe", left to right ----------
 const GLYPHS = '!<>_/\\[]{}=+*^?#$%&01abcdefxz';
 const logoSlots = (() => {
   const mk = c => h('span', { class: 'ch', 'aria-hidden': 'true' }, c);
-  const dev = [...'Dev'].map(mk), feed = [...'Feed'].map(mk);
+  const dev = [...'Tail'].map(mk), feed = [...'pipe'].map(mk);
   $('#logo').replaceChildren(...dev, h('span', { class: 'feed' }, ...feed));
   return [...dev, ...feed].map(el => ({ el, final: el.textContent }));
 })();
